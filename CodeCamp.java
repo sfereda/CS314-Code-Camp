@@ -137,10 +137,19 @@ public class CodeCamp {
                     "numPeople: " + numPeople +
                     ", numDaysInYear: " + numDaysInYear);
         }
-
-        /* CS314 STUDENTS: INSERT YOUR CODE HERE AND DELETE THIS COMMENT.*/
-
-        return -1;
+        int[] bDayList = new int[numPeople];
+        for (int i = 0; i < numPeople; i++){
+            bDayList[i] = (int) (Math.random() * numDaysInYear);
+        }
+        int countPairs = 0;
+        for(int currPerson = 0; currPerson < numPeople; currPerson++){
+            for(int nextPerson = currPerson + 1; nextPerson < numPeople; nextPerson++){
+                if(bDayList[nextPerson] == bDayList[currPerson]){
+                    countPairs++;
+                }
+            }
+        }
+        return countPairs;
     }
 
 
@@ -172,7 +181,20 @@ public class CodeCamp {
         boolean[] badRows = new boolean[8];
         boolean[] badColumns = new boolean[8];
 
-        for(int row = 0; row < board.length; )
+        for(int row = 0; row < board.length; row++){
+            for(int col = 0; col < board[row].length; col++){
+                if(board[row][col] == 'q'){
+                    if(badRows[row] || badColumns[col]) {
+                        return false;
+                    }
+                    else{
+                        badRows[row] = true;
+                        badColumns[col] = true;
+                    }
+
+                }
+            }
+        }
 
         return false;
     }
