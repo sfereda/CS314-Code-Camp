@@ -57,14 +57,32 @@ public class CodeCamp {
             throw new IllegalArgumentException("Violation of precondition: " +
                     "isPermutation. neither parameter may equal null.");
         }
-        for(int outerIndex = 0; outerIndex < aData.length; outerIndex++){
-            for(int innerIndex = 0; innerIndex < bData.length; innerIndex++){
-
+        if(aData.length != bData.length) {
+            return false;
+        }
+        mySort(aData);
+        mySort(bData);
+        for(int i = 0; i < aData.length; i++){
+            if(aData[i] != bData[i]){
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
+    private static void mySort(int[] originalArray) {
+        for (int i = 0; i < originalArray.length - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < originalArray.length; j++) {
+                if (originalArray[j] < originalArray[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            int temp = originalArray[minIndex];
+            originalArray[minIndex] = originalArray[i];
+            originalArray[i] = temp;
+        }
+    }
 
     /**
      * Determine the index of the String that
