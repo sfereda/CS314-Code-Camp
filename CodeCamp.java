@@ -196,25 +196,31 @@ public class CodeCamp {
                     "queensAreSafe. The board may not be null, must be square, " +
                     "and may only contain 'q's and '.'s");
         }
-        boolean[] badRows = new boolean[8];
-        boolean[] badColumns = new boolean[8];
 
-        for(int row = 0; row < board.length; row++){
-            for(int col = 0; col < board[row].length; col++){
-                if(board[row][col] == 'q'){
-                    if(badRows[row] || badColumns[col]) {
-                        return false;
-                    }
-                    else{
-                        badRows[row] = true;
-                        badColumns[col] = true;
-                    }
+        int boardSize = board.length;
 
+        // find the current queen
+        for (int currRow = 0; currRow < boardSize; currRow++) {
+            for (int currCol = 0; currCol < boardSize; currCol++) {
+                // if queen is found, look in all directions for another queen
+                if (board[currRow][currCol] == 'q') {
+                    // check current row for another queen
+                    for (int scanCol = 0; scanCol < boardSize; scanCol++) {
+                        if (board[currRow][scanCol] == 'q' && scanCol != currCol) {
+                            return false;
+                        }
+                    }
+                    // check current column for another queen
+                    for (int scanRow = 0; scanRow < boardSize; scanRow++) {
+                        if (board[scanRow][currCol] == 'q' && scanRow != currRow) {
+                            return false;
+                        }
+                    }
+                    //
                 }
             }
         }
-
-        return false;
+        return true;
     }
 
 
@@ -241,9 +247,28 @@ public class CodeCamp {
                     " one column, and must be rectangular.");
         }
 
-        /* CS314 STUDENTS: INSERT YOUR CODE HERE AND DELETE THIS COMMENT.*/
+        int max = Integer.MIN_VALUE;
+        int rows = city.length;
+        int cols = city[0].length;
 
-        return -1;
+        for (int topLeftRow = 0; topLeftRow < rows; topLeftRow++) {
+            for (int topLeftCol = 0; topLeftCol < cols; topLeftCol++) {
+                for (int bottomRightRow = topLeftRow; bottomRightRow < rows; bottomRightRow++) {
+                    for (int bottomRightCol = topLeftCol; bottomRightCol < cols; bottomRightCol++) {
+                        int sum = 0;
+                        for (int currRow = topLeftRow; currRow <= bottomRightRow; currRow++) {
+                            for (int currCol = topLeftCol; currCol <= bottomRightCol; currCol++) {
+                                sum += city[currRow][currCol];
+                            }
+                        }
+                        if (sum > max) {
+                            max = sum;
+                        }
+                    }
+                }
+            }
+        }
+        return max;
     }
 
     /*
