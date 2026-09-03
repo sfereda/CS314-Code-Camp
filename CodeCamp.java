@@ -60,8 +60,11 @@ public class CodeCamp {
         if(aData.length != bData.length) {
             return false;
         }
+        // sort data to "align" matches
         mySort(aData);
         mySort(bData);
+
+        // directly compare the two sorted arrays
         for(int i = 0; i < aData.length; i++){
             if(aData[i] != bData[i]){
                 return false;
@@ -70,6 +73,8 @@ public class CodeCamp {
         return true;
     }
 
+    // selection sort for the isPermutation method which helps
+    // with direct comparison of values
     private static void mySort(int[] originalArray) {
         for (int i = 0; i < originalArray.length - 1; i++) {
             int minIndex = i;
@@ -110,13 +115,19 @@ public class CodeCamp {
                     "at least one none null value.");
         }
 
+        // create an array of valid characters that we are looking to
+        // "spot" and keep a count of
         char[] vowels = {'a','A','e','E','i','I','o','O','u','U'};
 
         int maxVowelCount = -1;
         int maxVowelInd = 0;
+
+        // go through the array of strings, looking at each string element one at a time
         for(int strIndex = 0; strIndex < arrayOfStrings.length; strIndex++){
             int totalVowel = 0;
+            // check that there is a valid string in the current index
             if(arrayOfStrings[strIndex] != null) {
+                // go through each letter of the current String
                 for (int let = 0; let < arrayOfStrings[strIndex].length(); let++) {
                     for (char vowel : vowels) {
                         if (arrayOfStrings[strIndex].charAt(let) == vowel) {
@@ -124,6 +135,8 @@ public class CodeCamp {
                         }
                     }
                 }
+                // if there are more vowels in current string than the previous max one,
+                // change the max vowel count and update the max index to access later
                 if (totalVowel > maxVowelCount) {
                     maxVowelInd = strIndex;
                     maxVowelCount = totalVowel;
@@ -216,7 +229,49 @@ public class CodeCamp {
                             return false;
                         }
                     }
-                    //
+                    // check upper left diagonal
+                    int scan_x_axis = currCol - 1;
+                    int scan_y_axis = currRow - 1;
+                    while (scan_y_axis >= 0 && scan_x_axis >= 0) {
+                        if (board[scan_y_axis][scan_x_axis] == 'q') {
+                            return false;
+                        }
+                        scan_x_axis--;
+                        scan_y_axis--;
+                    }
+
+                    // check upper right diagonal
+                    scan_x_axis = currCol + 1;
+                    scan_y_axis = currRow - 1;
+                    while (scan_y_axis >= 0 && scan_x_axis < boardSize) {
+                        if (board[scan_y_axis][scan_x_axis] == 'q') {
+                            return false;
+                        }
+                        scan_x_axis++;
+                        scan_y_axis--;
+                    }
+
+                    // check lower left diagonal
+                    scan_x_axis = currCol - 1;
+                    scan_y_axis = currRow + 1;
+                    while (scan_y_axis < boardSize && scan_x_axis >= 0) {
+                        if (board[scan_y_axis][scan_x_axis] == 'q') {
+                            return false;
+                        }
+                        scan_x_axis--;
+                        scan_y_axis++;
+                    }
+
+                    // check lower right diagonal
+                    scan_x_axis = currCol + 1;
+                    scan_y_axis = currRow + 1;
+                    while (scan_y_axis < boardSize && scan_x_axis < boardSize) {
+                        if (board[scan_y_axis][scan_x_axis] == 'q') {
+                            return false;
+                        }
+                        scan_x_axis++;
+                        scan_y_axis++;
+                    }
                 }
             }
         }

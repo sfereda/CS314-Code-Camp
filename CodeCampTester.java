@@ -416,7 +416,7 @@ public class CodeCampTester {
             System.out.println("***** FAILED ***** test 29, shared birthdays. "
                     + "Expected at least 1 pair. Value returned: " + pairs);
         }
-/*
+
         // test 30, queensAreASafe
         char[][] board = { { '.', '.', '.' },
                 { 'q', '.', '.' },
@@ -486,7 +486,7 @@ public class CodeCampTester {
         } else {
             System.out.println(" ***** FAILED ***** test 33, queensAreSafe");
         }
-*/
+
         // test 34, getValueOfMostValuablePlot
         int[][] city = { { 0, -2, -7, 0, -1 },
                 { 9, 2, -6, 2, 0 },
