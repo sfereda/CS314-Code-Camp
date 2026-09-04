@@ -13,7 +13,13 @@
  *  Section 5 digit ID: 55030
  *  Number of slip days used on this assignment: 0
  */
-
+//  The CodeCamp class houses the main 6 public methods that are
+//  necessary for the first assignment of CS314, as well as
+//  some private helper methods that optimize the understandability
+//  of the code.
+//
+//  Public methods: hammingDistance(), isPermutation(), mostVowels(),
+//  sharedBirthdays(), queensAreSafe(), & getValueOfMostValuablePlot()
 public class CodeCamp {
 
     /**
@@ -32,8 +38,8 @@ public class CodeCamp {
                     " must be equal length.");
         }
         int diffCount = 0;
-        for (int i = 0; i < aData.length; i++){
-            if(aData[i] != bData[i]){
+        for (int i = 0; i < aData.length; i++) {
+            if (aData[i] != bData[i]) {
                 diffCount++;
             }
         }
@@ -57,36 +63,21 @@ public class CodeCamp {
             throw new IllegalArgumentException("Violation of precondition: " +
                     "isPermutation. neither parameter may equal null.");
         }
-        if(aData.length != bData.length) {
+        // check if arrays are different sizes --> automatically false
+        if (aData.length != bData.length) {
             return false;
         }
         // sort data to "align" matches
-        mySort(aData);
-        mySort(bData);
+        int[] sortedA = selectionSort(aData);
+        int[] sortedB = selectionSort(bData);
 
         // directly compare the two sorted arrays
-        for(int i = 0; i < aData.length; i++){
-            if(aData[i] != bData[i]){
+        for (int i = 0; i < aData.length; i++) {
+            if (sortedA[i] != sortedB[i]) {
                 return false;
             }
         }
         return true;
-    }
-
-    // selection sort for the isPermutation method which helps
-    // with direct comparison of values
-    private static void mySort(int[] originalArray) {
-        for (int i = 0; i < originalArray.length - 1; i++) {
-            int minIndex = i;
-            for (int j = i + 1; j < originalArray.length; j++) {
-                if (originalArray[j] < originalArray[minIndex]) {
-                    minIndex = j;
-                }
-            }
-            int temp = originalArray[minIndex];
-            originalArray[minIndex] = originalArray[i];
-            originalArray[i] = temp;
-        }
     }
 
     /**
@@ -115,38 +106,23 @@ public class CodeCamp {
                     "at least one none null value.");
         }
 
-        // create an array of valid characters that we are looking to
-        // "spot" and keep a count of
-        char[] vowels = {'a','A','e','E','i','I','o','O','u','U'};
-
         int maxVowelCount = -1;
         int maxVowelInd = 0;
 
         // go through the array of strings, looking at each string element one at a time
-        for(int strIndex = 0; strIndex < arrayOfStrings.length; strIndex++){
-            int totalVowel = 0;
-            // check that there is a valid string in the current index
-            if(arrayOfStrings[strIndex] != null) {
-                // go through each letter of the current String
-                for (int let = 0; let < arrayOfStrings[strIndex].length(); let++) {
-                    for (char vowel : vowels) {
-                        if (arrayOfStrings[strIndex].charAt(let) == vowel) {
-                            totalVowel++;
-                        }
-                    }
-                }
-                // if there are more vowels in current string than the previous max one,
-                // change the max vowel count and update the max index to access later
-                if (totalVowel > maxVowelCount) {
+        for (int strIndex = 0; strIndex < arrayOfStrings.length; strIndex++) {
+            if (arrayOfStrings[strIndex] != null) {
+                int totalVowelCount = countVowels(arrayOfStrings[strIndex]);
+                // if there are more vowels in this string than the max one,
+                // change the max vowel count and update the max index
+                if (totalVowelCount > maxVowelCount) {
                     maxVowelInd = strIndex;
-                    maxVowelCount = totalVowel;
+                    maxVowelCount = totalVowelCount;
                 }
             }
         }
         return maxVowelInd;
     }
-
-
 
     /**
      * Perform an experiment simulating the birthday problem.
@@ -168,14 +144,16 @@ public class CodeCamp {
                     "numPeople: " + numPeople +
                     ", numDaysInYear: " + numDaysInYear);
         }
+        // make an array of "people" according to their random birthday
         int[] bDayList = new int[numPeople];
-        for (int i = 0; i < numPeople; i++){
+        for (int i = 0; i < numPeople; i++) {
             bDayList[i] = (int) (Math.random() * numDaysInYear);
         }
+        // for every person, check if the people to the right share birthdays
         int countPairs = 0;
-        for(int currPerson = 0; currPerson < numPeople; currPerson++){
-            for(int nextPerson = currPerson + 1; nextPerson < numPeople; nextPerson++){
-                if(bDayList[nextPerson] == bDayList[currPerson]){
+        for (int currPerson = 0; currPerson < numPeople; currPerson++) {
+            for (int nextPerson = currPerson + 1; nextPerson < numPeople; nextPerson++) {
+                if (bDayList[nextPerson] == bDayList[currPerson]) {
                     countPairs++;
                 }
             }
@@ -215,7 +193,6 @@ public class CodeCamp {
         // find the current queen
         for (int currRow = 0; currRow < boardSize; currRow++) {
             for (int currCol = 0; currCol < boardSize; currCol++) {
-                // if queen is found, look in all directions for another queen
                 if (board[currRow][currCol] == 'q') {
                     // check current row for another queen
                     for (int scanCol = 0; scanCol < boardSize; scanCol++) {
@@ -230,47 +207,47 @@ public class CodeCamp {
                         }
                     }
                     // check upper left diagonal
-                    int scan_x_axis = currCol - 1;
-                    int scan_y_axis = currRow - 1;
-                    while (scan_y_axis >= 0 && scan_x_axis >= 0) {
-                        if (board[scan_y_axis][scan_x_axis] == 'q') {
+                    int scanXAxis = currCol - 1;
+                    int scanYAxis = currRow - 1;
+                    while (scanYAxis >= 0 && scanXAxis >= 0) {
+                        if (board[scanYAxis][scanXAxis] == 'q') {
                             return false;
                         }
-                        scan_x_axis--;
-                        scan_y_axis--;
+                        scanXAxis--;
+                        scanYAxis--;
                     }
 
                     // check upper right diagonal
-                    scan_x_axis = currCol + 1;
-                    scan_y_axis = currRow - 1;
-                    while (scan_y_axis >= 0 && scan_x_axis < boardSize) {
-                        if (board[scan_y_axis][scan_x_axis] == 'q') {
+                    scanXAxis = currCol + 1;
+                    scanYAxis = currRow - 1;
+                    while (scanYAxis >= 0 && scanXAxis < boardSize) {
+                        if (board[scanYAxis][scanXAxis] == 'q') {
                             return false;
                         }
-                        scan_x_axis++;
-                        scan_y_axis--;
+                        scanXAxis++;
+                        scanYAxis--;
                     }
 
                     // check lower left diagonal
-                    scan_x_axis = currCol - 1;
-                    scan_y_axis = currRow + 1;
-                    while (scan_y_axis < boardSize && scan_x_axis >= 0) {
-                        if (board[scan_y_axis][scan_x_axis] == 'q') {
+                    scanXAxis = currCol - 1;
+                    scanYAxis = currRow + 1;
+                    while (scanYAxis < boardSize && scanXAxis >= 0) {
+                        if (board[scanYAxis][scanXAxis] == 'q') {
                             return false;
                         }
-                        scan_x_axis--;
-                        scan_y_axis++;
+                        scanXAxis--;
+                        scanYAxis++;
                     }
 
                     // check lower right diagonal
-                    scan_x_axis = currCol + 1;
-                    scan_y_axis = currRow + 1;
-                    while (scan_y_axis < boardSize && scan_x_axis < boardSize) {
-                        if (board[scan_y_axis][scan_x_axis] == 'q') {
+                    scanXAxis = currCol + 1;
+                    scanYAxis = currRow + 1;
+                    while (scanYAxis < boardSize && scanXAxis < boardSize) {
+                        if (board[scanYAxis][scanXAxis] == 'q') {
                             return false;
                         }
-                        scan_x_axis++;
-                        scan_y_axis++;
+                        scanXAxis++;
+                        scanYAxis++;
                     }
                 }
             }
@@ -302,10 +279,11 @@ public class CodeCamp {
                     " one column, and must be rectangular.");
         }
 
-        int max = Integer.MIN_VALUE;
+        int max = city[0][0];
         int rows = city.length;
         int cols = city[0].length;
 
+        // brute force scan --. O(N^6)
         for (int topLeftRow = 0; topLeftRow < rows; topLeftRow++) {
             for (int topLeftCol = 0; topLeftCol < cols; topLeftCol++) {
                 for (int bottomRightRow = topLeftRow; bottomRightRow < rows; bottomRightRow++) {
@@ -413,6 +391,40 @@ public class CodeCamp {
             row++;
         }
         return correct;
+    }
+
+    /*
+     * pre: originalArray != null, originalArray.length > 0
+     * post: return originalArray in ascending order
+     */
+    private static int[] selectionSort(int[] originalArray) {
+        for (int i = 0; i < originalArray.length - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < originalArray.length; j++) {
+                if (originalArray[j] < originalArray[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            int temp = originalArray[minIndex];
+            originalArray[minIndex] = originalArray[i];
+            originalArray[i] = temp;
+        }
+        return originalArray;
+    }
+
+    /*
+     * pre: word != null
+     * post: return number of vowels in word
+     */
+    private static int countVowels(String word) {
+        int count = 0;
+        final String vowels = "AEIOUaeiou";
+        for (int i = 0; i < word.length(); i++) {
+            if (vowels.indexOf(word.charAt(i)) != -1) {
+                count++;
+            }
+        }
+        return count;
     }
 
     // make constructor private so no instances of CodeCamp can not be created
